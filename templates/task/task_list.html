@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}タスク一覧{% endblock %}
+{% block h1 %}タスク一覧{% endblock %}
+
+{% block content %}
+    <div class="border-bottom">
+        <div class="p-4 m-4 bg-light border border-success rounded d-flex flex-column">
+            <div class="btn-group" role="group">
+                {% if request.GET.status == 'incomplete' %}
+                    <a href="{% url 'list-task' %}?status=incomplete" class="btn btn-success btn-sm">未完のタスク</a>
+                    <a href="{% url 'list-task' %}?status=completed" class="btn btn-outline-success btn-sm">完了したタスク</a>
+                {% elif request.GET.status == 'completed' %}
+                    <a href="{% url 'list-task' %}?status=incomplete" class="btn btn-outline-success btn-sm">未完のタスク</a>
+                    <a href="{% url 'list-task' %}?status=completed" class="btn btn-success btn-sm">完了したタスク</a>
+                {% else %}
+                    <a href="{% url 'list-task' %}?status=incomplete" class="btn btn-outline-success btn-sm bg-green-300">未完のタスク</a>
+                    <a href="{% url 'list-task' %}?status=completed" class="btn btn-outline-success btn-sm">完了したタスク</a>
+                {% endif %}
+            </div>
+
+            <div class="btn-group mt-3" role="group">
+                {% if request.GET.priority == 'high' %}
+                    <a href="{% url 'list-task' %}?priority=high" class="btn btn-success btn-sm">優先度 : 高</a>
+                    <a href="{% url 'list-task' %}?priority=medium" class="btn btn-outline-success btn-sm">優先度 : 中</a>
+                    <a href="{% url 'list-task' %}?priority=low" class="btn btn-outline-success btn-sm">優先度 : 低</a>
+                {% elif request.GET.priority == 'medium' %}
+                    <a href="{% url 'list-task' %}?priority=high" class="btn btn-outline-success btn-sm">優先度 : 高</a>
+                    <a href="{% url 'list-task' %}?priority=medium" class="btn btn-success btn-sm">優先度 : 中</a>
+                    <a href="{% url 'list-task' %}?priority=low" class="btn btn-outline-success btn-sm">優先度 : 低</a>
+                {% elif request.GET.priority == 'low' %}
+                    <a href="{% url 'list-task' %}?priority=high" class="btn btn-outline-success btn-sm">優先度 : 高</a>
+                    <a href="{% url 'list-task' %}?priority=medium" class="btn btn-outline-success btn-sm">優先度 : 中</a>
+                    <a href="{% url 'list-task' %}?priority=low" class="btn btn-success btn-sm">優先度 : 低</a>
+                {% else %}
+                    <a href="{% url 'list-task' %}?priority=high" class="btn btn-outline-success btn-sm">優先度 : 高</a>
+                    <a href="{% url 'list-task' %}?priority=medium" class="btn btn-outline-success btn-sm">優先度 : 中</a>
+                    <a href="{% url 'list-task' %}?priority=low" class="btn btn-outline-success btn-sm">優先度 : 低</a>
+                {% endif %}
+            </div>
+
+            {% if request.GET %}
+                <a href="{% url 'list-task' %}" class="btn btn-outline-danger btn-sm mt-2 btn-clear-filter">絞り込みを解除</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if task_context %}
+        {% for item in task_context %}
+            <div class="p-4 m-4 bg-light border border-success rounded">
+                <h2>
+                {% if item.status %}
+                    <del>
+                        <a href="{% url 'detail-task' item.pk %}" class="link-secondary link-offset-1 link-underline-opacity-50 link-underline-opacity-100-hover">
+                            {{ item.title }}
+                        </a>
+                    </del>
+                {% else %}
+                    <a href="{% url 'detail-task' item.pk %}" class="link-success link-offset-1 link-underline-opacity-50 link-underline-opacity-100-hover">
+                        {{ item.title }}
+                    </a>
+                {% endif %}
+                </h2>
+
+                <h6 class="mt-3 mb-0">
+                    {% if item.priority == '1' %}<span class="badge bg-danger">優先度 : 高</span>
+                    {% elif item.priority == '2' %}<span class="badge bg-warning text-dark">優先度 : 中</span>
+                    {% elif item.priority == '3' %}<span class="badge bg-success">優先度 : 低</span>
+                    {% endif %}
+                    
+                    <span class="ms-2 text-secondary">締切 : {{ item.deadline }}</span>
+                </h6>
+            </div>
+        {% endfor %}
+
+        <div class="pagination justify-content-center">
+            <span>
+                {% if task_context.has_previous %}
+                <a href="?page={{ task_context.previous_page_number }}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><small>&lt;&lt;前へ</small></a>
+                {% endif %}
+            </span>
+            <span class="mx-3">{{ task_context.number }}ページ目</span>
+            <span>
+                {% if task_context.has_next %}
+                <a href="?page={{ task_context.next_page_number }}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><small>次へ&gt;&gt;</small></a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p class="text-center">タスクはまだありません。</p>
+    {% endif %}
+{% endblock %}

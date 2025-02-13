@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}403エラー{% endblock %}
+{% block h1 %}403エラー{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger text-center p-4 m-4" role="alert">
+    <p>{{ error_message }}</p>
+    <a href="{% url 'list-task' %}">ホームに戻る</a>
+</div>
+{% endblock %}

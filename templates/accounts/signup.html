@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}サインアップ{% endblock %}
+{% block h1 %}サインアップ{% endblock %}
+
+{% block content %}
+<form method="post" class="p-4 m-4 bg-light border border-success rounded form-group">
+    {% csrf_token %}
+
+    <div class="form-floating">
+        <input type="text" class="form-control" id="username" placeholder="JohnDoe" name="username" required>
+        <label for="username">ユーザーID</label>
+    </div>
+    <div class="form-floating mt-3">
+        <input type="password" class="form-control" id="password1" placeholder="password" name="password1" required>
+        <label for="password1">パスワード</label>
+    </div>
+    <div class="form-floating mt-3">
+        <input type="password" class="form-control" id="password2" placeholder="password" name="password2" required>
+        <label for="password2">パスワード確認用</label>
+    </div>
+    <small class="form-text">パスワードは8文字以上で設定してください。</small>
+    
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            {% for error_list in form.errors.values %}
+            {% for error in error_list %}
+                <p class="mb-0">{{ error }}</p>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-success">サインアップ</button>
+    </div>
+</form>
+{% endblock %}

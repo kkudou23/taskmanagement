@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}ログイン{% endblock %}
+{% block h1 %}ログイン{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="p-4 m-4 bg-light border border-success rounded">
+            <p>{{ user }}でログイン中</p>
+            <a href="{% url 'logout' %}">ログアウト</a>
+        </div>
+    {% else %}
+        <form method="post" class="p-4 m-4 bg-light border border-success rounded form-group">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                {% for error_list in form.errors.values %}
+                    {% for error in error_list %}
+                        <p class="mb-0">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" placeholder="JohnDoe" name="username" required>
+                <label for="username">ユーザーID</label>
+            </div>
+            <div class="form-floating mt-3">
+                <input type="password" class="form-control" id="password" placeholder="password" name="password" required>
+                <label for="password">パスワード</label>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success">ログイン</button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
